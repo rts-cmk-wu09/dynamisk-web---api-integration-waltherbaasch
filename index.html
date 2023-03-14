@@ -8,21 +8,18 @@
 </head>
 <body>
     <h1>Star Wars Characters</h1>
-    <ul id="character-list"></ul>
-
+    <ul id="characters-list"></ul>
     <script>
-      const characterList = document.getElementById('character-list');
-
-      fetch('https://swapi.dev/api/people')
+      fetch("https://swapi.dev/api/people/")
         .then(response => response.json())
         .then(data => {
+          const charactersList = document.getElementById("characters-list");
           data.results.forEach(character => {
-            const listItem = document.createElement('li');
-            listItem.innerText = character.name;
-            characterList.appendChild(listItem);
+            const li = document.createElement("li");
+            li.textContent = character.name;
+            charactersList.appendChild(li);
           });
-        })
-        .catch(error => console.error(error));
+        });
     </script>
 </body>
 </html>

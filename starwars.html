@@ -1,12 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+<html>
+  <head>
+    <title>Character Name - Star Wars Characters</title>
+  </head>
+  <body>
+    <h1>Character Name</h1>
+    <ul>
+      <li><strong>Height:</strong> <span id="height"></span></li>
+      <li><strong>Mass:</strong> <span id="mass"></span></li>
+      <li><strong>Hair color:</strong> <span id="hair-color"></span></li>
+      <li><strong>Skin color:</strong> <span id="skin-color"></span></li>
+      <li><strong>Eye color:</strong> <span id="eye-color"></span></li>
+      <li><strong>Birth year:</strong> <span id="birth-year"></span></li>
+      <li><strong>Gender:</strong> <span id="gender"></span></li>
+    </ul>
+    <a href="index.html">Back to characters list</a>
+    <script>
+      const characterId = new URLSearchParams(window.location.search).get("id");
+      fetch(`https://swapi.dev/api/people/${characterId}/`)
+        .then(response => response.json())
+        .then(character => {
+          document.title = `${character.name} - Star Wars Characters`;
+          document.getElementById("height").textContent = character.height;
+          document.getElementById("mass").textContent = character.mass;
+          document.getElementById("hair-color").textContent = character.hair_color;
+          document.getElementById("skin-color").textContent = character.skin_color;
+          document.getElementById("eye-color").textContent = character.eye_color;
+          document.getElementById("birth-year").textContent = character.birth_year;
+          document.getElementById("gender").textContent = character.gender;
+        });
+    </script>
+  </body>
 </html>
