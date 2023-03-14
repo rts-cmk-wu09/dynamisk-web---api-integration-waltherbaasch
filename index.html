@@ -1,25 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+<html>
+  <head>
+    <title>Star Wars Characters</title>
+  </head>
+  <body>
     <h1>Star Wars Characters</h1>
-    <ul id="characters-list"></ul>
+    <div id="characters"></div>
+
     <script>
-      fetch("https://swapi.dev/api/people/")
+      const charactersDiv = document.getElementById("characters");
+
+      fetch("https://swapi.dev/api/people")
         .then(response => response.json())
         .then(data => {
-          const charactersList = document.getElementById("characters-list");
-          data.results.forEach(character => {
-            const li = document.createElement("li");
-            li.textContent = character.name;
-            charactersList.appendChild(li);
+          const characters = data.results;
+
+          characters.forEach(character => {
+            const characterDiv = document.createElement("div");
+
+            const name = document.createElement("h2");
+            name.textContent = character.name;
+            characterDiv.appendChild(name);
+
+            const image = document.createElement("img");
+            fetch(`https://starwars-visualguide.com/assets/img/characters/${getCharacterId(character.url)}.jpg`)
+              .then(response => response.ok ? response.blob() : Promise.reject('Failed to load'))
+              .then(imageBlob => {
+                const objectUrl = URL.createObjectURL(imageBlob);
+                image.src = objectUrl;
+                characterDiv.appendChild(image);
+              })
+              .catch(error => {
+                console.error(error);
+              });
+
+            charactersDiv.appendChild(characterDiv);
           });
+        })
+        .catch(error => {
+          console.error(error);
         });
+
+      function getCharacterId(url) {
+        const id = url.match(/(\d+)\/$/)[1];
+        return id;
+      }
     </script>
-</body>
+  </body>
 </html>
