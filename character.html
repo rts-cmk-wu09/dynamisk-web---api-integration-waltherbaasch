@@ -1,0 +1,97 @@
+<head>
+    <title>Character Name | Star Wars Characters</title>
+    <style>
+      #characters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.character {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.character h2 {
+  margin-top: 0;
+}
+
+.character img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.character p {
+  margin: 0;
+}
+
+@media screen and (max-width: 768px) {
+  #characters {
+    grid-template-columns: 1fr;
+  }
+}
+
+    </style>
+  </head>
+  <script>
+    const characterDiv = document.getElementById("character");
+    const urlParams = new URLSearchParams(window.location.search);
+    const characterName = urlParams.get("name");
+  
+    fetch(`https://swapi.dev/api/people/?search=${characterName}`)
+      .then(response => response.json())
+      .then(data => {
+        const character = data.results[0];
+  
+        const name = document.createElement("h2");
+        name.textContent = character.name;
+        characterDiv.appendChild(name);
+  
+        const gender = document.createElement("p");
+        gender.textContent = `Gender: ${character.gender}`;
+        characterDiv.appendChild(gender);
+  
+        const birthYear = document.createElement("p");
+        birthYear.textContent = `Birth Year: ${character.birth_year}`;
+        characterDiv.appendChild(birthYear);
+  
+        const height = document.createElement("p");
+        height.textContent = `Height: ${character.height} cm`;
+        characterDiv.appendChild(height);
+  
+        const mass = document.createElement("p");
+        mass.textContent = `Mass: ${character.mass} kg`;
+        characterDiv.appendChild(mass);
+  
+        const films = document.createElement("p");
+        films.textContent = "Films:";
+        characterDiv.appendChild(films);
+  
+        const filmsList = document.createElement("ul");
+        character.films.forEach(filmUrl => {
+          const filmItem = document.createElement("li");
+          fetch(filmUrl)
+            .then(response => response.json())
+            .then(film => {
+              const filmLink = document.createElement("a");
+              filmLink.href = `film.html?title=${film.title}`;
+              filmLink.textContent = film.title;
+              filmItem.appendChild(filmLink);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          filmsList.appendChild(filmItem);
+        });
+        characterDiv.appendChild(filmsList);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  </script>
+    

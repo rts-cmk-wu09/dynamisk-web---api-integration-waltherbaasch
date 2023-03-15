@@ -41,8 +41,12 @@
             const characterDiv = document.createElement("div");
 
             const name = document.createElement("h2");
-            name.textContent = character.name;
-            characterDiv.appendChild(name);
+const nameLink = document.createElement("a");
+nameLink.href = `character.html?name=${character.name}`;
+nameLink.textContent = character.name;
+name.appendChild(nameLink);
+characterDiv.appendChild(name);
+
 
             const image = document.createElement("img");
             fetch(`https://starwars-visualguide.com/assets/img/characters/${getCharacterId(character.url)}.jpg`)
