@@ -3,27 +3,42 @@
   <head>
     <title>Star Wars Characters</title>
     <style>
-        #characters {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 20px;
-        }
-  
-        .character {
-          border: 1px solid #ccc;
-          padding: 10px;
-          text-align: center;
-        }
-  
-        .character h2 {
-          margin-top: 0;
-        }
-  
-        .character img {
-          max-width: 100%;
-          height: auto;
-        }
-      </style>
+      #characters {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      .character {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .character h2 {
+        margin-top: 0;
+      }
+
+      .character img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .card {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        margin: 20px;
+        max-width: 500px;
+        text-align: center;
+      }
+
+      .card img {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
   </head>
   <body>
     <h1>Star Wars Characters</h1>
@@ -39,18 +54,24 @@
 
           characters.forEach(character => {
             const characterDiv = document.createElement("div");
+            characterDiv.classList.add("character");
 
             const name = document.createElement("h2");
-const nameLink = document.createElement("a");
-nameLink.href = `character.html?name=${character.name}`;
-nameLink.textContent = character.name;
-name.appendChild(nameLink);
-characterDiv.appendChild(name);
-
+            const nameLink = document.createElement("a");
+            nameLink.href = `character.html?name=${character.name}`;
+            nameLink.textContent = character.name;
+            name.appendChild(nameLink);
+            characterDiv.appendChild(name);
 
             const image = document.createElement("img");
-            fetch(`https://starwars-visualguide.com/assets/img/characters/${getCharacterId(character.url)}.jpg`)
-              .then(response => response.ok ? response.blob() : Promise.reject('Failed to load'))
+            fetch(
+              `https://starwars-visualguide.com/assets/img/characters/${getCharacterId(
+                character.url
+              )}.jpg`
+            )
+              .then(response =>
+                response.ok ? response.blob() : Promise.reject("Failed to load")
+              )
               .then(imageBlob => {
                 const objectUrl = URL.createObjectURL(imageBlob);
                 image.src = objectUrl;
@@ -59,6 +80,14 @@ characterDiv.appendChild(name);
               .catch(error => {
                 console.error(error);
               });
+
+            characterDiv.addEventListener("click", () => {
+              window.open(
+                `character.html?name=${character.name}`,
+                "Star Wars Character",
+                "width=500,height=600"
+              );
+            });
 
             charactersDiv.appendChild(characterDiv);
           });

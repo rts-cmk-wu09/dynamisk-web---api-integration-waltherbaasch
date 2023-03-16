@@ -1,91 +1,72 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Star Wars Characters</title>
+    <title>Star Wars Character</title>
     <style>
-      #characters {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-      }
-
-      .character {
+      .card {
         border: 1px solid #ccc;
         border-radius: 5px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
         padding: 20px;
+        margin: 20px;
+        max-width: 500px;
         text-align: center;
       }
 
-      .character h2 {
-        margin-top: 0;
-      }
-
-      .character img {
+      .card img {
         max-width: 100%;
         height: auto;
-        border-radius: 50%;
-        margin-bottom: 10px;
-      }
-
-      .character p {
-        margin: 0;
-      }
-
-      @media screen and (max-width: 768px) {
-        #characters {
-          grid-template-columns: 1fr;
-        }
       }
     </style>
   </head>
-
   <body>
-    <h1>Star Wars Characters</h1>
-    <div id="characters"></div>
+    <div id="character"></div>
 
     <script>
-      const charactersDiv = document.getElementById("characters");
+      const characterDiv = document.getElementById("character");
 
-      fetch("https://swapi.dev/api/people")
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get("name");
+
+      fetch(`https://swapi.dev/api/people/?search=${name}`)
         .then(response => response.json())
         .then(data => {
-          const characters = data.results;
+          const character = data.results[0];
 
-          characters.forEach(character => {
-            const characterDiv = document.createElement("div");
-            characterDiv.classList.add("character");
+          const card = document.createElement("div");
+          card.classList.add("card");
 
-            const name = document.createElement("h2");
-            name.textContent = character.name;
-            characterDiv.appendChild(name);
+          const name = document.createElement("h2");
+          name.textContent = character.name;
+          card.appendChild(name);
 
-            const image = document.createElement("img");
-            fetch(`https://starwars-visualguide.com/assets/img/characters/${getCharacterId(character.url)}.jpg`)
-              .then(response => response.ok ? response.blob() : Promise.reject('Failed to load'))
-              .then(imageBlob => {
-                const objectUrl = URL.createObjectURL(imageBlob);
-                image.src = objectUrl;
-                characterDiv.appendChild(image);
-              })
-              .catch(error => {
-                console.error(error);
-              });
+          const image = document.createElement("img");
+          fetch(
+            `https://starwars-visualguide.com/assets/img/characters/${getCharacterId(
+              character.url
+            )}.jpg`
+          )
+            .then(response =>
+              response.ok ? response.blob() : Promise.reject("Failed to load")
+            )
+            .then(imageBlob => {
+              const objectUrl = URL.createObjectURL(imageBlob);
+              image.src = objectUrl;
+              card.appendChild(image);
+            })
+            .catch(error => {
+              console.error(error);
+            });
 
-            const birthYear = document.createElement("p");
-            birthYear.textContent = `Birth Year: ${character.birth_year}`;
-            characterDiv.appendChild(birthYear);
+          const birthYear = document.createElement("p");
+          birthYear.textContent = `Birth Year: ${character.birth_year}`;
+          card.appendChild(birthYear);
 
-            const gender = document.createElement("p");
-            gender.textContent = `Gender: ${character.gender}`;
-            characterDiv.appendChild(gender);
+          const height = document.createElement("p");
+          height.textContent = `Height: ${character.height} cm`;
+          card.appendChild(height);
 
-            const height = document.createElement("p");
-            height.textContent = `Height: ${character.height} cm`;
-            characterDiv.appendChild(height);
-
-            charactersDiv.appendChild(characterDiv);
-          });
+          characterDiv.appendChild(card);
         })
         .catch(error => {
           console.error(error);
